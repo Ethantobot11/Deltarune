@@ -14,7 +14,8 @@
     },
     {
       "name": "hxcpp",
-      "type": "haxelib"
+      "type": "git",
+      "url": "https://github.com/AlafandyPorting/hxcpp-0.7.3"
     },
     {
       "name": "lime",

@@ -1,0 +1,28 @@
+{
+  "dependencies": [
+    {
+      "name": "flixel",
+      "type": "haxelib"
+    },
+    {
+      "name": "flixel-addons",
+      "type": "haxelib"
+    },
+    {
+      "name": "hscript",
+      "type": "haxelib"
+    },
+    {
+      "name": "hxcpp",
+      "type": "haxelib"
+    },
+    {
+      "name": "lime",
+      "type": "haxelib"
+    },
+    {
+      "name": "openfl",
+      "type": "haxelib"
+    }
+  ]
+}

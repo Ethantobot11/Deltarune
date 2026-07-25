@@ -51,6 +51,7 @@ jobs:
             os: macos-15
             buildArgs: "ios -final -relase -nosign"
             artifactName: iOSBuild
+            artifactPath: "export/release/ios/build/Release-iphoneos/Deltarune.ipa"
     uses: ./.github/workflows/build.yml
     with:
         name: ${{ matrix.name }}

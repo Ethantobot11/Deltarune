@@ -75,6 +75,11 @@ jobs:
         run: |
           haxelib install hmm --quiet
           haxelib run hmm install --quiet
+
+      - name: Setup Lime and Flixel
+        run: |
+          haxelib run lime setup
+          haxelib run lime setup flixel
      
       - name: Clearing already existing cache
         if: inputs.name == 'iOS'

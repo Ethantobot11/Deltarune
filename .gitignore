@@ -1,4 +1,4 @@
-export/*
-.haxelib/*
+export/
+.haxelib/
 bin/
 hmm/

@@ -18,7 +18,8 @@
     },
     {
       "name": "lime",
-      "type": "haxelib"
+      "type": "git",
+      "url": "https://github.com/ArkoseLabsOfficial/lime"
     },
     {
       "name": "openfl",

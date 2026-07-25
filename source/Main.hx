@@ -26,8 +26,8 @@ extern "C" HRESULT WINAPI SetCurrentProcessExplicitAppUserModelID(PCWSTR AppID);
 
 class Main extends Sprite
 {
-	var gameWidth:Int = 1280; 
-	var gameHeight:Int = 720; 
+	var gameWidth:Int = 320; 
+	var gameHeight:Int = 240; 
 	var zoom:Float = 1; 
 	var initialState:Class<FlxState> = PlayState;
 	var framerate:Int = 60; 

@@ -7,15 +7,14 @@ import flixel.graphics.frames.FlxAtlasFrames;
 class Player extends FlxSprite
 {
     public var moveSpeed:Float = 120;
+    public var facingDir:String = "down";
+    public var isBusy:Bool = false;
 
     public function new(x:Float, y:Float)
     {
         super(x, y);
 
-        frames = FlxAtlasFrames.fromSparrow(
-            "assets/images/chars/Kris_Light.png", 
-            "assets/images/chars/Kris_Light.xml"
-        );
+        frames = FlxAtlasFrames.fromSparrow("assets/images/char/Kris_Light.png", "assets/images/char/Kris_Light.xml");
 
         animation.addByPrefix("walk_down", "spr_krisd_", 6, true);
         animation.addByPrefix("walk_left", "spr_krisl_", 6, true);
@@ -29,13 +28,17 @@ class Player extends FlxSprite
 
         animation.play("idle_down");
 
-        setSize(18, 38);
-        offset.set(18, 38);
+        setSize(16, 12);
+        offset.set(3, 26);
     }
 
     override public function update(elapsed:Float)
     {
-        handleMovement();
+        if (!isBusy)
+            handleMovement();
+        else
+            velocity.set(0, 0);
+
         super.update(elapsed);
     }
 
@@ -68,11 +71,11 @@ class Player extends FlxSprite
 
         if (up || down || left || right)
         {
-            if (up) velocity.y = -moveSpeed;
-            else if (down) velocity.y = moveSpeed;
+            if (up) { velocity.y = -moveSpeed; facingDir = "up"; }
+            else if (down) { velocity.y = moveSpeed; facingDir = "down"; }
 
-            if (left) velocity.x = -moveSpeed;
-            else if (right) velocity.x = moveSpeed;
+            if (left) { velocity.x = -moveSpeed; facingDir = "left"; }
+            else if (right) { velocity.x = moveSpeed; facingDir = "right"; }
 
             velocity.truncate(moveSpeed);
 
@@ -83,14 +86,10 @@ class Player extends FlxSprite
         }
         else
         {
-            if (animation.curAnim != null)
-            {
-                var curName = animation.curAnim.name;
-                if (curName.indexOf("up") != -1) animation.play("idle_up");
-                else if (curName.indexOf("down") != -1) animation.play("idle_down");
-                else if (curName.indexOf("left") != -1) animation.play("idle_left");
-                else if (curName.indexOf("right") != -1) animation.play("idle_right");
-            }
+            if (facingDir == "up") animation.play("idle_up");
+            else if (facingDir == "down") animation.play("idle_down");
+            else if (facingDir == "left") animation.play("idle_left");
+            else if (facingDir == "right") animation.play("idle_right");
         }
     }
 }

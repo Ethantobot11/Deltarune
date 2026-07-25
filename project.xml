@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<app title="Deltarune Haxe" main="Main" package="com.haxe.deltarune" version="1.0.0" company="Ethantobot" />
+
+	<window width="1280" height="720" fps="60" background="#000000" hardware="true" vsync="false" />
+
+	<window if="mobile" width="0" height="0" orientation="landscape" fullscreen="true" />
+
+	<source path="source" />
+
+	<assets path="assets/images/chars" rename="assets/images/chars" />
+
+	<haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
+
+	<haxedef name="FLX_NO_GAMEPAD" />
+</project>

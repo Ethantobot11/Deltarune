@@ -14,7 +14,7 @@ class Player extends FlxSprite
     {
         super(x, y);
 
-        frames = FlxAtlasFrames.fromSparrow("assets/images/char/Kris_Light.png", "assets/images/char/Kris_Light.xml");
+        frames = FlxAtlasFrames.fromSparrow("assets/images/chars/Kris_Light.png", "assets/images/chars/Kris_Light.xml");
 
         animation.addByPrefix("walk_down", "spr_krisd_", 6, true);
         animation.addByPrefix("walk_left", "spr_krisl_", 6, true);

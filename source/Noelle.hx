@@ -15,7 +15,7 @@ class Noelle extends FlxSprite
     {
         super(x, y);
 
-        frames = FlxAtlasFrames.fromSparrow("assets/images/noelle_light.png", "assets/images/noelle_light.xml");
+        frames = FlxAtlasFrames.fromSparrow("assets/images/chars/noelle_light.png", "assets/images/chars/noelle_light.xml");
 
         animation.addByPrefix("walk_down", "spr_noelle_walk_down_lw_", 6, true);
         animation.addByPrefix("walk_up", "spr_noelle_walk_up_lw_", 6, true);

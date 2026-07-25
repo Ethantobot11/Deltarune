@@ -96,12 +96,12 @@ class PlayState extends FlxState
                 if (choiceBox.selectedIndex == 0)
                 {
                     noelle.isFollowing = true;
-                    dialogueBox.startDialogue("* Great! Let's go!", "noelle face", "spr_face_n_matome_00000", "light");
+                    dialogueBox.startDialogue("* Great! Let's go!", "noelle_face", "spr_face_n_matome_00000", "light");
                     dialogueStage = 2;
                 }
                 else
                 {
-                    dialogueBox.startDialogue("* Oh... okay, maybe later!", "noelle face", "spr_face_n_matome_10000", "light");
+                    dialogueBox.startDialogue("* Oh... okay, maybe later!", "noelle_face", "spr_face_n_matome_10000", "light");
                     dialogueStage = 2;
                 }
             }
@@ -135,7 +135,7 @@ class PlayState extends FlxState
             kris.isBusy = true;
             dialogueBox.startDialogue(
                 "* Hi Kris!\n* Want me to come with you?", 
-                "noelle face", 
+                "noelle_face", 
                 "spr_face_n_matome_00000", 
                 "light"
             );

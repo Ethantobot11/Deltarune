@@ -122,12 +122,11 @@ jobs:
         run: haxelib run lime build ${{ inputs.buildArgs }}
 
       - name: Make IPA
-        if: (inputs.name == 'iOS-PNG' || inputs.name == 'iOS-ASTC')
+        if: inputs.name == 'iOS'
         run: |
           brew install ldid
           cd export/release/ios/build/Release-iphoneos/Deltarune.app
           ldid -S../../../Deltarune/Deltarune.entitlements Deltarune
-          cd ..
           mkdir Payload
           mv Deltarune.app Payload
           zip -r Deltarune.ipa Payload

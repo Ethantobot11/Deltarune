@@ -24,21 +24,22 @@ class DarkWorldTransition extends FlxSprite
         this.player = player;
         this.door = door;
 
-        // Long drop distance (~650px down)
         this.targetLandingY = player.y + 650;
 
         frames = FlxAtlasFrames.fromSparrow("assets/images/trans/kris_dark_trans.png", "assets/images/trans/kris_dark_trans.xml");
 
-        // Animations from XML
         animation.addByPrefix("run_up", "spr_krisu_run_", 8, true);
         animation.addByPrefix("fall_lw", "spr_krisu_fall_lw_", 8, true);
         animation.addByPrefix("turnaround", "spr_kris_fall_turnaround_", 8, false);
-        animation.addByPrefix("fall_down_lw", "spr_kris_fall_d_lw_", 8, true);
-        
-        // White silhouette flash animation
-        animation.addByPrefix("fall_down_white", "spr_kris_fall_d_white_", 8, true);
-        
-        animation.addByPrefix("fall_down_dw", "spr_kris_fall_d_dw_", 8, true);
+        animation.addByPrefix("fall_down_lw", "spr_kris_fall_d_lw_", 6, true);
+
+            animation.addByNames("fall_down_white", [
+                "spr_kris_fall_d_white_00000",
+                "spr_kris_fall_d_white_10000",
+                "spr_kris_fall_d_white_20000"
+            ], 6, true);
+
+        animation.addByPrefix("fall_down_dw", "spr_kris_fall_d_dw_", 6, true);
         animation.addByPrefix("smear", "spr_kris_fall_smear_", 12, false);
         animation.addByPrefix("ball", "spr_kris_fall_ball_", 12, true);
         animation.addByPrefix("landed", "spr_kris_dw_landed_", 8, false);
@@ -105,7 +106,7 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 3:
-                if (timer >= 0.6)
+                if (timer >= 0.8)
                 {
                     velocity.y = 120;
                     animation.play("fall_down_lw");
@@ -114,19 +115,27 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 4:
-                if (timer >= 0.7)
+                if (timer >= 0.6)
                 {
-                    animation.play("fall_down_white");
-                    velocity.y = 160;
+                    var curFrame:Int = animation.frameIndex; 
+                    
+                    animation.play("fall_down_white"); 
+                    animation.curAnim.curFrame = curFrame;
+                    
+                    velocity.y = 150;
                     statePhase = 5;
                     timer = 0;
                 }
 
             case 5:
-                if (timer >= 0.3)
+                if (timer >= 0.5)
                 {
+                    var curFrame:Int = animation.frameIndex;
+                    
                     animation.play("fall_down_dw");
-                    velocity.y = 220;
+                    animation.curAnim.curFrame = curFrame;
+                    
+                    velocity.y = 200;
                     statePhase = 6;
                     timer = 0;
                 }

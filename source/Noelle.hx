@@ -29,8 +29,7 @@ class Noelle extends FlxSprite
         animation.play("idle_down");
 
         immovable = true;
-        setSize(23, 47);
-        offset.set(23, 47);
+        updateHitbox();
     }
 
     override public function update(elapsed:Float)

@@ -11,6 +11,7 @@ import flixel.ui.FlxVirtualPad;
 
 class PlayState extends FlxState
 {
+    var rudinn:Rudinn;
     public var kris:Player;
     public var noelle:Noelle;
     public var dialogueBox:DialogueBox;
@@ -25,6 +26,8 @@ class PlayState extends FlxState
     override public function create()
     {
         super.create();
+
+        FlxG.debugger.drawDebug = true;
 
         var background = FlxGridOverlay.create(16, 16, 1280, 720, true, 0xff1d1d24, 0xff282832);
         add(background);
@@ -60,18 +63,61 @@ class PlayState extends FlxState
             FlxG.collide(kris, noelle);
         }
 
-        var interactPressed = FlxG.keys.anyJustPressed([Z, ENTER, SPACE]);
+        FlxG.collide(kris, closetDoor);
+
+        var interactPressed = FlxG.keys.anyJustPressed([Z, ENTER, SPACE #if mobile ,A #end]);
 
         if (interactPressed && !kris.isBusy && FlxG.overlap(kris, closetDoor) && kris.facingDir == "up")
-            {
-                var transition = new DarkWorldTransition(kris, closetDoor);
-                transition.onComplete = function() {
-                    trace("Transition complete!");
-                };
-                add(transition);
-            }
+        {
+            kris.isBusy = true;
+            var transition = new DarkWorldTransition(kris, closetDoor);
+            transition.onComplete = function() {
+                spawnDarkWorldEntities();
+            };
+            add(transition);
+        }
 
-        handleInputs();
+        if (rudinn != null)
+        {
+            var isNear = flixel.math.FlxMath.distanceBetween(kris, rudinn) < 30;
+
+            if (!kris.isBusy && (FlxG.overlap(kris, rudinn) || isNear))
+            {
+                kris.isBusy = true;
+                startBattle(rudinn);
+            }
+        }
+
+        handleInputs();     
+    }
+
+    function startBattle(targetEnemy:Rudinn):Void
+    {
+        trace('[startBattle()] Entering startBattle function...');
+        kris.isBusy = true;
+        
+        var battleState = new BattleState(targetEnemy);
+        
+        battleState.closeCallback = function() {
+            trace('[BattleState CLOSED] Returning from BattleState');
+            kris.isBusy = false;
+            if (targetEnemy != null)
+            {
+                targetEnemy.destroy();
+                rudinn = null;
+            }
+        };
+
+        trace('[openSubState] Opening BattleState substate now...');
+        openSubState(battleState);
+    }
+
+    function spawnDarkWorldEntities()
+    {
+        trace('[spawnDarkWorldEntities] Transition done. Unfreezing Kris and spawning Rudinn.');
+        kris.isBusy = false;
+        rudinn = new Rudinn(kris.x + 100, kris.y, 150);
+        add(rudinn);
     }
 
     private function handleInputs()
@@ -105,12 +151,12 @@ class PlayState extends FlxState
                 if (dialogueBox.selectedIndex == 0)
                 {
                     noelle.isFollowing = true;
-                    dialogueBox.startDialogue("* Great! Let's go!", "noelle face", "spr_face_n_matome_00000", "light", false);
+                    dialogueBox.startDialogue("* Great! Let's go!", "noelle_face", "spr_face_n_matome_00000", "light", false);
                     dialogueStage = 2;
                 }
                 else
                 {
-                    dialogueBox.startDialogue("* Oh... okay, maybe later!", "noelle face", "spr_face_n_matome_10000", "light", false);
+                    dialogueBox.startDialogue("* Oh... okay, maybe later!", "noelle_face", "spr_face_n_matome_10000", "light", false);
                     dialogueStage = 2;
                 }
             }

@@ -15,12 +15,21 @@ class Player extends FlxSprite
     public var moveSpeed:Float = 120;
     public var facingDir:String = "down";
     public var isBusy:Bool = false;
+    public var isDarkWorld:Bool = false;
     public var pathHistory:Array<PositionFrame> = [];
 
     public function new(x:Float, y:Float)
     {
         super(x, y);
 
+        loadLightWorld();
+
+        updateHitbox();
+    }
+
+    public function loadLightWorld():Void
+    {
+        isDarkWorld = false;
         frames = FlxAtlasFrames.fromSparrow("assets/images/chars/Kris_Light.png", "assets/images/chars/Kris_Light.xml");
 
         animation.addByPrefix("walk_down", "spr_krisd_", 6, true);
@@ -34,9 +43,48 @@ class Player extends FlxSprite
         animation.addByPrefix("idle_up", "spr_krisu_00000", 0, false);
 
         animation.play("idle_down");
+    }
 
-        setSize(16, 12);
-        offset.set(3, 26);
+    public function loadDarkWorld():Void
+    {
+        isDarkWorld = true;
+        
+        frames = FlxAtlasFrames.fromSparrow("assets/images/chars/Kris_Dark.png", "assets/images/chars/Kris_Dark.xml");
+
+        animation.addByNames("walk_down", [
+            "spr_krisd_dark_00000", 
+            "spr_krisd_dark_10000", 
+            "spr_krisd_dark_20000", 
+            "spr_krisd_dark_30000"
+        ], 6, true);
+
+        animation.addByNames("walk_left", [
+            "spr_krisl_dark_00000", 
+            "spr_krisl_dark_10000", 
+            "spr_krisl_dark_20000", 
+            "spr_krisl_dark_30000"
+        ], 6, true);
+
+        animation.addByNames("walk_right", [
+            "spr_krisr_dark_00000", 
+            "spr_krisr_dark_10000", 
+            "spr_krisr_dark_20000", 
+            "spr_krisr_dark_30000"
+        ], 6, true);
+
+        animation.addByNames("walk_up", [
+            "spr_krisu_dark_00000", 
+            "spr_krisu_dark_10000", 
+            "spr_krisu_dark_20000", 
+            "spr_krisu_dark_30000"
+        ], 6, true);
+
+        animation.addByNames("idle_down", ["spr_krisd_dark_00000"], 0, false);
+        animation.addByNames("idle_left", ["spr_krisl_dark_00000"], 0, false);
+        animation.addByNames("idle_right", ["spr_krisr_dark_00000"], 0, false);
+        animation.addByNames("idle_up", ["spr_krisu_dark_00000"], 0, false);
+
+        animation.play("idle_down");
     }
 
     override public function update(elapsed:Float)

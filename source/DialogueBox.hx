@@ -15,12 +15,20 @@ class DialogueBox extends FlxSpriteGroup
     public var portrait:FlxSprite;
     var textDisplay:FlxText;
 
+    public var soulCursor:FlxSprite;
+    var optionYesText:FlxText;
+    var optionNoText:FlxText;
+
     var fullText:String = "";
     var currentText:String = "";
     var charIndex:Int = 0;
     var typeTimer:FlxTimer;
-    
+    var soundAsset:String = "snd_txtnoe.wav";
+
     public var isFinished:Bool = false;
+    public var hasChoices:Bool = false;
+    public var isChoosing:Bool = false;
+    public var selectedIndex:Int = 0;
 
     public function new(x:Float, y:Float)
     {
@@ -40,6 +48,36 @@ class DialogueBox extends FlxSpriteGroup
         textDisplay.color = FlxColor.WHITE;
         add(textDisplay);
 
+        soulCursor = new FlxSprite(0, 0);
+        if (openfl.utils.Assets.exists("soul/iconOG.png"))
+        {
+            soulCursor.loadGraphic("soul/iconOG.png");
+            soulCursor.setGraphicSize(16, 16);
+            soulCursor.updateHitbox();
+        }
+        else if (openfl.utils.Assets.exists("soul/iconOG.png"))
+        {
+            soulCursor.loadGraphic("soul/iconOG.png");
+            soulCursor.setGraphicSize(16, 16);
+            soulCursor.updateHitbox();
+        }
+        else
+        {
+            soulCursor.makeGraphic(8, 8, FlxColor.RED);
+        }
+        soulCursor.visible = false;
+        add(soulCursor);
+
+        optionYesText = new FlxText(210, 18, 50, "YES", 10);
+        optionYesText.color = FlxColor.WHITE;
+        optionYesText.visible = false;
+        add(optionYesText);
+
+        optionNoText = new FlxText(210, 36, 50, "NO", 10);
+        optionNoText.color = FlxColor.WHITE;
+        optionNoText.visible = false;
+        add(optionNoText);
+
         scrollFactor.set(0, 0);
         forEach(function(spr:FlxSprite) {
             spr.scrollFactor.set(0, 0);
@@ -48,14 +86,7 @@ class DialogueBox extends FlxSpriteGroup
         visible = false;
     }
 
-    /**
-     * Start a dialogue line.
-     * @param text The dialogue text to print
-     * @param faceAtlas Atlas image name (e.g. "noelle_face")
-     * @param expressionFrame Specific XML SubTexture name (e.g. "spr_face_n_matome_00000")
-     * @param style "light" or "dark" world box style
-     */
-    public function startDialogue(text:String, faceAtlas:String = null, expressionFrame:String = null, style:String = "light")
+    public function startDialogue(text:String, faceAtlas:String = null, expressionFrame:String = null, style:String = "light", withChoices:Bool = false, snd:String = "snd_txtnoe.wav")
     {
         boxBorder.makeGraphic(280, 68, (style == "dark") ? 0xFF000080 : FlxColor.WHITE);
 
@@ -63,11 +94,17 @@ class DialogueBox extends FlxSpriteGroup
         currentText = "";
         charIndex = 0;
         isFinished = false;
+        hasChoices = withChoices;
+        isChoosing = false;
+        soundAsset = snd;
         visible = true;
+
+        soulCursor.visible = false;
+        optionYesText.visible = false;
+        optionNoText.visible = false;
 
         if (faceAtlas != null && expressionFrame != null)
         {
-            // Load atlas from assets
             portrait.frames = FlxAtlasFrames.fromSparrow(
                 'assets/images/${faceAtlas}.png', 
                 'assets/images/${faceAtlas}.xml'
@@ -77,18 +114,17 @@ class DialogueBox extends FlxSpriteGroup
             portrait.animation.play("expression");
 
             portrait.visible = true;
-            
             portrait.setGraphicSize(54, 54);
             portrait.updateHitbox();
 
             textDisplay.x = x + 68;
-            textDisplay.fieldWidth = 200;
+            textDisplay.fieldWidth = withChoices ? 130 : 200;
         }
         else
         {
             portrait.visible = false;
             textDisplay.x = x + 15;
-            textDisplay.fieldWidth = 250;
+            textDisplay.fieldWidth = withChoices ? 180 : 250;
         }
 
         textDisplay.text = "";
@@ -107,14 +143,14 @@ class DialogueBox extends FlxSpriteGroup
 
             if (char != " " && char != "\n")
             {
-                FlxG.sound.play("assets/sounds/snd_txtnoe.wav", 0.6);
+                FlxG.sound.play('assets/sounds/${soundAsset}', 0.6);
             }
 
             charIndex++;
         }
         else
         {
-            isFinished = true;
+            onDialogueFinished();
             timer.cancel();
         }
     }
@@ -124,6 +160,52 @@ class DialogueBox extends FlxSpriteGroup
         if (typeTimer != null) typeTimer.cancel();
         currentText = fullText;
         textDisplay.text = currentText;
+        onDialogueFinished();
+    }
+
+    private function onDialogueFinished()
+    {
         isFinished = true;
+
+        if (hasChoices)
+        {
+            showChoices();
+        }
+    }
+
+    private function showChoices()
+    {
+        isChoosing = true;
+        selectedIndex = 0;
+
+        optionYesText.visible = true;
+        optionNoText.visible = true;
+        soulCursor.visible = true;
+
+        updateCursorPosition();
+    }
+
+    public function navigateChoices(up:Bool, down:Bool)
+    {
+        if (!isChoosing) return;
+
+        if (up && selectedIndex > 0)
+        {
+            selectedIndex = 0;
+            FlxG.sound.play("assets/sounds/snd_text.wav", 0.5);
+            updateCursorPosition();
+        }
+        else if (down && selectedIndex < 1)
+        {
+            selectedIndex = 1;
+            FlxG.sound.play("assets/sounds/snd_text.wav", 0.5);
+            updateCursorPosition();
+        }
+    }
+
+    private function updateCursorPosition()
+    {
+        soulCursor.x = x + 196;
+        soulCursor.y = y + (selectedIndex == 0 ? 20 : 38);
     }
 }

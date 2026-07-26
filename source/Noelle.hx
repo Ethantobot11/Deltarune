@@ -2,14 +2,13 @@ package;
 
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.math.FlxMath;
 
 class Noelle extends FlxSprite
 {
-    public var moveSpeed:Float = 115;
     public var isFollowing:Bool = false;
     public var target:Player;
-    public var followDistance:Float = 28;
+    
+    public var trailDelay:Int = 18; 
 
     public function new(x:Float, y:Float)
     {
@@ -38,52 +37,31 @@ class Noelle extends FlxSprite
     {
         if (isFollowing && target != null)
         {
-            followTarget();
+            followPathTrail();
         }
         super.update(elapsed);
     }
 
-    private function followTarget()
+    private function followPathTrail()
     {
-        var dist = FlxMath.distanceBetween(this, target);
-
-        if (dist > followDistance)
+        if (target.pathHistory.length >= trailDelay)
         {
-            var dx = target.x - x;
-            var dy = target.y - y;
+            var targetFrame = target.pathHistory[trailDelay - 1];
 
-            velocity.set(0, 0);
+            if (x != targetFrame.x || y != targetFrame.y)
+            {
+                x = targetFrame.x;
+                y = targetFrame.y;
 
-            if (Math.abs(dx) > Math.abs(dy))
-            {
-                if (dx > 0)
-                {
-                    velocity.x = moveSpeed;
-                    animation.play("walk_right");
-                }
-                else
-                {
-                    velocity.x = -moveSpeed;
-                    animation.play("walk_left");
-                }
-            }
-            else
-            {
-                if (dy > 0)
-                {
-                    velocity.y = moveSpeed;
-                    animation.play("walk_down");
-                }
-                else
-                {
-                    velocity.y = -moveSpeed;
-                    animation.play("walk_up");
-                }
+                if (targetFrame.anim.indexOf("up") != -1) animation.play("walk_up");
+                else if (targetFrame.anim.indexOf("down") != -1) animation.play("walk_down");
+                else if (targetFrame.anim.indexOf("left") != -1) animation.play("walk_left");
+                else if (targetFrame.anim.indexOf("right") != -1) animation.play("walk_right");
             }
         }
-        else
+
+        if (target.velocity.x == 0 && target.velocity.y == 0)
         {
-            velocity.set(0, 0);
             if (animation.curAnim != null)
             {
                 var curName = animation.curAnim.name;

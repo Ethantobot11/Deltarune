@@ -14,7 +14,7 @@ class PlayState extends FlxState
     public var kris:Player;
     public var noelle:Noelle;
     public var dialogueBox:DialogueBox;
-    public var choiceBox:ChoiceBox;
+    var closetDoor:DarkDoor;
 
     var dialogueStage:Int = 0;
 
@@ -41,14 +41,14 @@ class PlayState extends FlxState
         dialogueBox = new DialogueBox(20, FlxG.height - 70);
         add(dialogueBox);
 
-        choiceBox = new ChoiceBox(FlxG.width - 140, FlxG.height - 125);
-        add(choiceBox);
-
         #if mobile
         virtualPad = new FlxVirtualPad(FULL, A);
         virtualPad.alpha = 0.5;
         add(virtualPad);
         #end
+
+        closetDoor = new DarkDoor(300, 100);
+        add(closetDoor);
     }
 
     override public function update(elapsed:Float)
@@ -59,6 +59,17 @@ class PlayState extends FlxState
         {
             FlxG.collide(kris, noelle);
         }
+
+        var interactPressed = FlxG.keys.anyJustPressed([Z, ENTER, SPACE]);
+
+        if (interactPressed && !kris.isBusy && FlxG.overlap(kris, closetDoor) && kris.facingDir == "up")
+            {
+                var transition = new DarkWorldTransition(kris, closetDoor);
+                transition.onComplete = function() {
+                    trace("Transition complete!");
+                };
+                add(transition);
+            }
 
         handleInputs();
     }
@@ -82,62 +93,54 @@ class PlayState extends FlxState
         downPressed = FlxG.keys.anyJustPressed([DOWN, S]);
         #end
 
-        if (choiceBox.isActive)
+        if (dialogueBox.isChoosing)
         {
             if (upPressed || downPressed)
             {
-                choiceBox.navigate(upPressed, downPressed);
+                dialogueBox.navigateChoices(upPressed, downPressed);
             }
 
             if (interactPressed)
             {
-                choiceBox.close();
-
-                if (choiceBox.selectedIndex == 0)
+                if (dialogueBox.selectedIndex == 0)
                 {
                     noelle.isFollowing = true;
-                    dialogueBox.startDialogue("* Great! Let's go!", "noelle_face", "spr_face_n_matome_00000", "light");
+                    dialogueBox.startDialogue("* Great! Let's go!", "noelle face", "spr_face_n_matome_00000", "light", false);
                     dialogueStage = 2;
                 }
                 else
                 {
-                    dialogueBox.startDialogue("* Oh... okay, maybe later!", "noelle_face", "spr_face_n_matome_10000", "light");
+                    dialogueBox.startDialogue("* Oh... okay, maybe later!", "noelle face", "spr_face_n_matome_10000", "light", false);
                     dialogueStage = 2;
                 }
             }
             return;
         }
 
-        // Dialogue Progression
         if (dialogueStage > 0 && interactPressed)
         {
             if (!dialogueBox.isFinished)
             {
                 dialogueBox.skipTyping();
             }
-            else
+            else if (dialogueStage == 2)
             {
-                if (dialogueStage == 1)
-                {
-                    choiceBox.open();
-                }
-                else if (dialogueStage == 2)
-                {
-                    dialogueBox.visible = false;
-                    kris.isBusy = false;
-                    dialogueStage = 0;
-                }
+                dialogueBox.visible = false;
+                kris.isBusy = false;
+                dialogueStage = 0;
             }
         }
         else if (dialogueStage == 0 && interactPressed && isKrisFacingNoelle())
         {
             dialogueStage = 1;
             kris.isBusy = true;
+            
             dialogueBox.startDialogue(
                 "* Hi Kris!\n* Want me to come with you?", 
                 "noelle_face", 
                 "spr_face_n_matome_00000", 
-                "light"
+                "light",
+                true
             );
         }
     }

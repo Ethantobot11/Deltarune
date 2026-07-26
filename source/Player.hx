@@ -4,11 +4,18 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 
+typedef PositionFrame = {
+    var x:Float;
+    var y:Float;
+    var anim:String;
+}
+
 class Player extends FlxSprite
 {
     public var moveSpeed:Float = 120;
     public var facingDir:String = "down";
     public var isBusy:Bool = false;
+    public var pathHistory:Array<PositionFrame> = [];
 
     public function new(x:Float, y:Float)
     {
@@ -34,12 +41,33 @@ class Player extends FlxSprite
 
     override public function update(elapsed:Float)
     {
+        var oldX = x;
+        var oldY = y;
+
         if (!isBusy)
             handleMovement();
         else
             velocity.set(0, 0);
 
         super.update(elapsed);
+
+        if (x != oldX || y != oldY)
+        {
+            var curAnimName = (animation.curAnim != null) ? animation.curAnim.name : "walk_down";
+            pathHistory.unshift({x: x, y: y, anim: curAnimName});
+
+            if (pathHistory.length > 100)
+            {
+                pathHistory.pop();
+            }
+        }
+        else
+        {
+            if (facingDir == "up") animation.play("idle_up");
+            else if (facingDir == "down") animation.play("idle_down");
+            else if (facingDir == "left") animation.play("idle_left");
+            else if (facingDir == "right") animation.play("idle_right");
+        }
     }
 
     private function handleMovement()

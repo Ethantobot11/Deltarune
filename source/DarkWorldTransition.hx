@@ -31,15 +31,11 @@ class DarkWorldTransition extends FlxSprite
         animation.addByPrefix("run_up", "spr_krisu_run_", 8, true);
         animation.addByPrefix("fall_lw", "spr_krisu_fall_lw_", 8, true);
         animation.addByPrefix("turnaround", "spr_kris_fall_turnaround_", 8, false);
-        animation.addByPrefix("fall_down_lw", "spr_kris_fall_d_lw_", 6, true);
-
-            animation.addByNames("fall_down_white", [
-                "spr_kris_fall_d_white_00000",
-                "spr_kris_fall_d_white_10000",
-                "spr_kris_fall_d_white_20000"
-            ], 6, true);
-
-        animation.addByPrefix("fall_down_dw", "spr_kris_fall_d_dw_", 6, true);
+        animation.addByPrefix("fall_down_lw", "spr_kris_fall_d_lw_", 8, true);
+        
+        animation.addByPrefix("fall_down_white", "spr_kris_fall_d_white_", 8, true);
+        
+        animation.addByPrefix("fall_down_dw", "spr_kris_fall_d_dw_", 8, true);
         animation.addByPrefix("smear", "spr_kris_fall_smear_", 12, false);
         animation.addByPrefix("ball", "spr_kris_fall_ball_", 12, true);
         animation.addByPrefix("landed", "spr_kris_dw_landed_", 8, false);
@@ -106,7 +102,7 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 3:
-                if (timer >= 0.8)
+                if (timer >= 0.6)
                 {
                     velocity.y = 120;
                     animation.play("fall_down_lw");
@@ -115,27 +111,19 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 4:
-                if (timer >= 0.6)
+                if (timer >= 0.7)
                 {
-                    var curFrame:Int = animation.frameIndex; 
-                    
-                    animation.play("fall_down_white"); 
-                    animation.curAnim.curFrame = curFrame;
-                    
-                    velocity.y = 150;
+                    animation.play("fall_down_white");
+                    velocity.y = 160;
                     statePhase = 5;
                     timer = 0;
                 }
 
             case 5:
-                if (timer >= 0.5)
+                if (timer >= 0.3)
                 {
-                    var curFrame:Int = animation.frameIndex;
-                    
                     animation.play("fall_down_dw");
-                    animation.curAnim.curFrame = curFrame;
-                    
-                    velocity.y = 200;
+                    velocity.y = 220;
                     statePhase = 6;
                     timer = 0;
                 }

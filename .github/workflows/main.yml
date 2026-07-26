@@ -51,6 +51,7 @@ jobs:
             os: macos-15
             buildArgs: "ios -final -relase -nosign"
             artifactName: iOSBuild
+            artifactPath: "export/release/ios/build/Release-iphoneos/*.ipa"
     uses: ./.github/workflows/build.yml
     with:
         name: ${{ matrix.name }}
@@ -67,13 +68,13 @@ jobs:
       - name: Download Windows Build
         uses: actions/download-artifact@main
         with:
-          name: windowsBuild-PNG
+          name: windowsBuild
           path: /home/runner/windowsBuild
 
       - name: Zip Windows Build For Release
         run: |
-          cd /home/runner/windowsBuild-PNG
-          zip -r "/home/runner/${{ env.PROJECT_NAME }}-Windows.zip" .
+          cd /home/runner/windowsBuild
+          zip -mr "/home/runner/${{ env.PROJECT_NAME }}-Windows.zip" .
           
       - name: Download Android Build
         uses: actions/download-artifact@main

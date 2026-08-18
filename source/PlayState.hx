@@ -32,12 +32,12 @@ class PlayState extends FlxState
         var background = FlxGridOverlay.create(16, 16, 1280, 720, true, 0xff1d1d24, 0xff282832);
         add(background);
 
-        kris = new Player(FlxG.width / 2, FlxG.height / 2);
-        add(kris);
-
         noelle = new Noelle(FlxG.width / 2 + 60, FlxG.height / 2);
         noelle.target = kris;
         add(noelle);
+
+        kris = new Player(FlxG.width / 2, FlxG.height / 2);
+        add(kris);
 
         FlxG.camera.follow(kris, TOPDOWN, 1);
 
@@ -65,7 +65,7 @@ class PlayState extends FlxState
 
         FlxG.collide(kris, closetDoor);
 
-        var interactPressed = FlxG.keys.anyJustPressed([Z, ENTER, SPACE #if mobile ,A #end]);
+        var interactPressed = #if desktop FlxG.keys.anyJustPressed([Z, ENTER, SPACE]) #else virtualPad.buttonA.JustPressed #end;
 
         if (interactPressed && !kris.isBusy && FlxG.overlap(kris, closetDoor) && kris.facingDir == "up")
         {

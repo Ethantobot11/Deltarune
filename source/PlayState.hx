@@ -65,7 +65,7 @@ class PlayState extends FlxState
 
         FlxG.collide(kris, closetDoor);
 
-        var interactPressed = #if desktop FlxG.keys.anyJustPressed([Z, ENTER, SPACE]) #else virtualPad.buttonA.JustPressed #end;
+        var interactPressed = #if desktop FlxG.keys.anyJustPressed([Z, ENTER, SPACE]) #else virtualPad.buttonA.pressed #end;
 
         if (interactPressed && !kris.isBusy && FlxG.overlap(kris, closetDoor) && kris.facingDir == "up")
         {

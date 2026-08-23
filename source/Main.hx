@@ -11,7 +11,7 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
 import MainMenuState;
-import mobile.backend.MobileScaleMode;
+import MobileScaleMode;
 import openfl.events.KeyboardEvent;
 import lime.system.System as LimeSystem;
 #if linux

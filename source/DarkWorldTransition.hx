@@ -91,7 +91,6 @@ class DarkWorldTransition extends FlxSprite
         x = krisX;
         y = krisY;
 
-        // Keep the black background locked to the camera view during the fall so it never runs out
         if (bgOverlay != null)
         {
             bgOverlay.x = FlxG.camera.scroll.x - FlxG.width;
@@ -302,7 +301,6 @@ class DarkWorldTransition extends FlxSprite
             case 32:
                 if (timer == 0)
                 {
-                    // Create a massive overlay that tracks the camera cleanly
                     bgOverlay = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, 0xFF000000);
                     FlxG.state.insert(FlxG.state.members.indexOf(this), bgOverlay);
                 }

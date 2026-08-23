@@ -56,7 +56,7 @@ class PlayState extends FlxState
         closetDoor = new DarkDoor(300, 100);
         add(closetDoor);
 
-        saveThing = new saveBlock(-200, 100);
+        saveThing = new SaveBlock(-200, 100);
         add(saveThing);
     }
 

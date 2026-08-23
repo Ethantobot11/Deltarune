@@ -1,5 +1,12 @@
 #if !macro
 
+#if sys
+import sys.*;
+import sys.io.*;
+#elseif js
+import js.html.*;
+#end
+
 // Android
 #if android
 import android.Tools as AndroidTools;

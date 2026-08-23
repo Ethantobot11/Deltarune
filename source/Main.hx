@@ -49,9 +49,7 @@ class Main extends Sprite
 	}
 
 	public function new()
-	{
-		CrashHandler.init();
-			
+	{			
 		#if windows
 		untyped __cpp__("SetProcessDPIAware();");
 		#end
@@ -80,6 +78,8 @@ class Main extends Sprite
 
 	private function setupGame():Void
 	{
+		CrashHandler.init();
+		
 		addChild(new FlxGame(
 			gameWidth,
 			gameHeight,

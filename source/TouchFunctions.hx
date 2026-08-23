@@ -1,4 +1,4 @@
-package mobile.backend;
+package;
 
 import flixel.FlxBasic;
 import flixel.input.touch.FlxTouch;

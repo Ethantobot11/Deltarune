@@ -1,14 +1,27 @@
 package;
 
-import flixel.FlxG;
-import flixel.FlxGame;
-import flixel.FlxState;
-import openfl.Lib;
-import openfl.display.FPS;
+import CrashHandler;
+import openfl.events.UncaughtErrorEvent;
 import FPSCounter;
+import flixel.FlxGame;
+import haxe.io.Path;
+import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
+import lime.app.Application;
+import MainMenuState;
+import mobile.backend.MobileScaleMode;
+import openfl.events.KeyboardEvent;
+import lime.system.System as LimeSystem;
+#if linux
+import lime.graphics.Image;
+
+@:cppInclude('./external/gamemode_client.h')
+@:cppFileCode('
+	#define GAMEMODE_AUTO
+')
+#end
 
 #if windows
 @:buildXml('
@@ -36,8 +49,6 @@ class Main extends Sprite
 	var startFullscreen:Bool = false;
 	public static var fpsVar:FPSCounter;
 
-	var showFps = (FlxG.save.data.options != null) ? FlxG.save.data.options.fpsEnabled : true;
-
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());
@@ -49,9 +60,22 @@ class Main extends Sprite
 	}
 
 	public function new()
-	{			
+	{
+		#if mobile
+		#if android
+		StorageUtil.requestPermissions();
+		#end
+		Sys.setCwd(StorageUtil.getStorageDirectory());
+		#end
+		CrashHandler.init();
+
 		#if windows
-		untyped __cpp__("SetProcessDPIAware();");
+		@:functionCode("
+			#include <windows.h>
+			#include <winuser.h>
+			setProcessDPIAware() // allows for more crisp visuals
+			DisableProcessWindowsGhosting() // lets you move the window and such if it's not responding
+		")
 		#end
 
 		super();
@@ -77,9 +101,7 @@ class Main extends Sprite
 	}
 
 	private function setupGame():Void
-	{
-		CrashHandler.init();
-		
+	{		
 		addChild(new FlxGame(
 			gameWidth,
 			gameHeight,
@@ -95,10 +117,32 @@ class Main extends Sprite
 		
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		if (fpsVar != null) {
+		    fpsVar.visible = OptionsState.showFps;
+		}
+
+		#if linux
+		var icon = Image.fromFile("soul/iconOG.png");
+		Lib.current.stage.window.setIcon(icon);
+		#end
 
 		#if html5
 		FlxG.autoPause = false;
 		FlxG.mouse.visible = false;
+		#end
+
+		FlxG.fixedTimestep = false;
+		FlxG.game.focusLostFramerate = #if mobile 30 #else 60 #end;
+		#if web
+		FlxG.keys.preventDefaultKeys.push(TAB);
+		#else
+		FlxG.keys.preventDefaultKeys = [TAB];
+		#end
+
+		#if android FlxG.android.preventDefaultKeys = [BACK]; #end
+
+		#if mobile
+		FlxG.scaleMode = new MobileScaleMode();
 		#end
 	}
 }

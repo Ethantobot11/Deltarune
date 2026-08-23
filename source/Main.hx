@@ -5,6 +5,7 @@ import flixel.FlxGame;
 import flixel.FlxState;
 import openfl.Lib;
 import openfl.display.FPS;
+import FPSCounter;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.display.StageScaleMode;
@@ -32,8 +33,8 @@ class Main extends Sprite
 	var initialState:Class<FlxState> = PlayState;
 	var framerate:Int = 60; 
 	var skipSplash:Bool = true; 
-	var startFullscreen:Bool = false; 
-	public static var fpsVar:FPS;
+	var startFullscreen:Bool = false;
+	public static var fpsVar:FPSCounter;
 
 	public static function main():Void
 	{
@@ -85,11 +86,13 @@ class Main extends Sprite
 			startFullscreen
 		));
 
-		fpsVar = new FPS(10, 3, 0xFFFFFF);
+		fpsVar = new FPSCounter(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
-		
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
+		if (fpsVar != null) {
+		    fpsVar.visible = showFps;
+		}
 
 		#if html5
 		FlxG.autoPause = false;

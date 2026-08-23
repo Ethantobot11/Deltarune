@@ -55,7 +55,6 @@ class DarkWorldTransition extends FlxSprite
 
         frames = FlxAtlasFrames.fromSparrow("assets/images/trans/kris_dark_trans.png", "assets/images/trans/kris_dark_trans.xml");
 
-        // Animations mapping
         animation.addByPrefix("run_up", "spr_krisu_run_", 8, true);
         animation.addByPrefix("fall_lw", "spr_krisu_fall_lw_", 8, true);
         animation.addByPrefix("turnaround", "spr_kris_fall_turnaround_", 10, false);
@@ -95,6 +94,10 @@ class DarkWorldTransition extends FlxSprite
                 var line2 = new DarkTransitionLine(250 + (Math.sin(xrand2) * 70) + FlxG.camera.scroll.x, -16 + FlxG.camera.scroll.y);
                 FlxG.state.insert(FlxG.state.members.indexOf(this), line1);
                 FlxG.state.insert(FlxG.state.members.indexOf(this), line2);
+                var particle1 = new DarkTransitionParticle(x + FlxG.random.float(-100, 100), y + FlxG.random.float(-50, 50));
+                var particle2 = new DarkTransitionParticle(x + FlxG.random.float(-100, 100), y + FlxG.random.float(-50, 50));
+                FlxG.state.insert(FlxG.state.members.indexOf(this), particle1);
+                FlxG.state.insert(FlxG.state.members.indexOf(this), particle2);
                 lineTimer = 0;
             }
         }

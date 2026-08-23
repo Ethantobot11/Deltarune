@@ -1,5 +1,7 @@
 package;
 
+import flixel.FlxState;
+import FlxG;
 import CrashHandler;
 import openfl.events.UncaughtErrorEvent;
 import FPSCounter;

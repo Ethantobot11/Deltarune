@@ -78,7 +78,7 @@ class MainMenuState extends FlxState {
         add(soulCursor);
 
         #if mobile
-        virtualPad = new FlxVirtualPad(UP_DOWN, A_B_X);
+        virtualPad = new FlxVirtualPad(UP_DOWN, A_B_C);
         add(virtualPad);
         #end
 
@@ -103,7 +103,7 @@ class MainMenuState extends FlxState {
             if (virtualPad.buttonDown.justPressed) downPressed = true;
             if (virtualPad.buttonA.justPressed) acceptPressed = true;
             if (virtualPad.buttonB.justPressed) backPressed = true;
-            if (virtualPad.buttonX.justPressed) erasePressed = true;
+            if (virtualPad.buttonC.justPressed) erasePressed = true;
         }
         #end
 

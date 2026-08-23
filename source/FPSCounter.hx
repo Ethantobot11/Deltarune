@@ -1,4 +1,4 @@
-package debug;
+package;
 
 import flixel.FlxG;
 import openfl.text.TextField;

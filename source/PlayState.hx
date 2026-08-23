@@ -15,6 +15,7 @@ class PlayState extends FlxState
     public var kris:Player;
     public var noelle:Noelle;
     public var dialogueBox:DialogueBox;
+    public var saveThing:saveBlock;
     var closetDoor:DarkDoor;
 
     var dialogueStage:Int = 0;
@@ -22,6 +23,8 @@ class PlayState extends FlxState
     #if mobile
     public static var virtualPad:FlxVirtualPad;
     #end
+
+    var inputLockout:Float = 0;
 
     override public function create()
     {
@@ -52,6 +55,9 @@ class PlayState extends FlxState
 
         closetDoor = new DarkDoor(300, 100);
         add(closetDoor);
+
+        saveThing = new saveBlock(-200, 100);
+        add(saveThing);
     }
 
     override public function update(elapsed:Float)
@@ -63,9 +69,16 @@ class PlayState extends FlxState
             FlxG.collide(kris, noelle);
         }
 
-        FlxG.collide(kris, closetDoor);
+        FlxG.collide(kris, closetDoor, saveThing);
 
         var interactPressed = #if desktop FlxG.keys.anyJustPressed([Z, ENTER, SPACE]) #else virtualPad.buttonA.pressed #end;
+
+        if (interactPressed && !kris.isBusy && FlxG.overlap(kris, saveThing) && kris.facingDir == "up")
+        {
+            kris.isBusy = true;
+            openSubState(new SaveMenuSubState());
+            inputLockout = 0.6;
+        }
 
         if (interactPressed && !kris.isBusy && FlxG.overlap(kris, closetDoor) && kris.facingDir == "up")
         {
@@ -75,6 +88,7 @@ class PlayState extends FlxState
                 spawnDarkWorldEntities();
             };
             add(transition);
+            inputLockout = 0,6;
         }
 
         if (rudinn != null)
@@ -86,6 +100,7 @@ class PlayState extends FlxState
                 kris.isBusy = true;
                 startBattle(rudinn);
             }
+            inputLockout = 0,6;
         }
 
         handleInputs();     

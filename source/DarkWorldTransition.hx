@@ -5,6 +5,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
+import flixel.system.FlxSound;
 
 class DarkWorldTransition extends FlxSprite
 {
@@ -22,7 +23,6 @@ class DarkWorldTransition extends FlxSprite
     
     var lineCon:Int = 0;
     var lineTimer:Int = 0;
-    var linesFxTimer:Int = 0;
     
     var rectDraw:Bool = false;
     var rectAmount:Int = 6;
@@ -38,6 +38,14 @@ class DarkWorldTransition extends FlxSprite
     
     var radius:Float = 60;
     var krisXCurrent:Float = 0;
+    
+    var soundCon:Int = 0;
+    var dronetimer:Int = 0;
+    var dronepitch:Float = 0;
+    var dronesfx:FlxSound;
+    var soundtimer:Int = 0;
+    var soundthreshold:Int = 6;
+    var rectsound:Int = 0;
     
     var megablack:FlxSprite;
     var bgOverlay:FlxSprite;
@@ -83,6 +91,30 @@ class DarkWorldTransition extends FlxSprite
         x = krisX;
         y = krisY;
 
+        if (soundCon == 1)
+        {
+            dronesfx = FlxG.sound.play("assets/sounds/snd_dtrans_drone.ogg", 0, true);
+            dronesfx.fade(0.5, 1.0);
+            dronesfx.pitch = 0.1;
+            dronetimer = 0;
+            soundCon = 2;
+        }
+
+        if (soundCon == 2)
+        {
+            dronetimer++;
+            dronepitch = dronetimer / 80;
+            
+            if (dronepitch >= 1)
+            {
+                dronepitch = 1;
+                soundCon = 3;
+            }
+            
+            if (dronesfx != null)
+                dronesfx.pitch = dronepitch;
+        }
+
         if (lineCon == 1)
         {
             lineTimer++;
@@ -94,10 +126,12 @@ class DarkWorldTransition extends FlxSprite
                 var line2 = new DarkTransitionLine(250 + (Math.sin(xrand2) * 70) + FlxG.camera.scroll.x, -16 + FlxG.camera.scroll.y);
                 FlxG.state.insert(FlxG.state.members.indexOf(this), line1);
                 FlxG.state.insert(FlxG.state.members.indexOf(this), line2);
+                
                 var particle1 = new DarkTransitionParticle(x + FlxG.random.float(-100, 100), y + FlxG.random.float(-50, 50));
                 var particle2 = new DarkTransitionParticle(x + FlxG.random.float(-100, 100), y + FlxG.random.float(-50, 50));
                 FlxG.state.insert(FlxG.state.members.indexOf(this), particle1);
                 FlxG.state.insert(FlxG.state.members.indexOf(this), particle2);
+                
                 lineTimer = 0;
             }
         }
@@ -141,6 +175,9 @@ class DarkWorldTransition extends FlxSprite
                 if (timer == 30)
                 {
                     if (door != null) door.setDoorState(DarkDoor.STATE_OPEN_FRAME);
+
+                    FlxG.sound.play("assets/sounds/snd_locker.ogg");
+                    
                     krisV = 0;
                     krisX -= 4;
                     animation.play("run_up");
@@ -164,6 +201,7 @@ class DarkWorldTransition extends FlxSprite
                     krisY -= 2;
                     animation.play("fall_lw");
                     con = 15;
+                    soundtimer = 0;
                 }
 
             case 15:
@@ -177,8 +215,20 @@ class DarkWorldTransition extends FlxSprite
                 rectDraw = true;
                 timer = 0;
                 con = 16;
+                soundtimer = 3;
+                rectsound = 0;
 
             case 16:
+                soundthreshold = 6;
+                soundtimer++;
+                
+                if (soundtimer >= soundthreshold && rectsound < rectAmount)
+                {
+                    soundtimer = 0;
+                    FlxG.sound.play("assets/sounds/snd_dtrans_square.ogg", 0.5);
+                    rectsound++;
+                }
+                
                 timer++;
                 if (timer >= 80)
                 {
@@ -192,6 +242,7 @@ class DarkWorldTransition extends FlxSprite
                 animation.play("turnaround");
                 con = 18;
                 timer = 0;
+                soundcon = 1;
 
             case 18:
                 timer++;
@@ -241,6 +292,10 @@ class DarkWorldTransition extends FlxSprite
                 timer++;
                 if (timer >= 14)
                 {
+                    soundcon = 4;
+                    if (dronesfx != null)
+                        dronesfx.fadeOut(0.5);
+                        
                     krisV = 13;
                     krisF = 0;
                     timer = 0;
@@ -252,6 +307,9 @@ class DarkWorldTransition extends FlxSprite
             case 33:
                 timer++;
                 if (timer == 14) lineCon = 0;
+                
+                if (timer == 39)
+                    FlxG.sound.play("assets/sounds/snd_dtrans_flip.ogg");
                 
                 if (krisY >= player.y + 2000)
                 {
@@ -265,7 +323,16 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 34:
+                if (dronesfx != null && dronesfx.playing)
+                    dronesfx.stop();
+                    
                 timer++;
+                
+                if (timer == 27)
+                {
+                    FlxG.sound.play("assets/sounds/snd_him_quick.ogg");
+                }
+                
                 if (animation.curAnim != null && animation.curAnim.name == "landed" && animation.curAnim.finished && timer >= 26)
                 {
                     player.x = krisX;

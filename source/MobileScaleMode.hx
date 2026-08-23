@@ -13,11 +13,11 @@ class MobileScaleMode extends BaseScaleMode
 
     override function updateGameSize(Width:Int, Height:Int):Void
 	{
-        if(ClientPrefs.wideScreen && allowWideScreen)
+        /*if(ClientPrefs.wideScreen && allowWideScreen)
         {
             super.updateGameSize(Width, Height);
         }
-        else
+        else*/
         {
             var ratio:Float = FlxG.width / FlxG.height;
             var realRatio:Float = Width / Height;
@@ -45,9 +45,9 @@ class MobileScaleMode extends BaseScaleMode
 
     override function updateGamePosition():Void
 	{
-        if(ClientPrefs.wideScreen && allowWideScreen)
-		    FlxG.game.x = FlxG.game.y = 0;
-        else
+        //if(ClientPrefs.wideScreen && allowWideScreen)
+		//    FlxG.game.x = FlxG.game.y = 0;
+        //else
             super.updateGamePosition();
 	}
 

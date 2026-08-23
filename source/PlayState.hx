@@ -88,7 +88,7 @@ class PlayState extends FlxState
                 spawnDarkWorldEntities();
             };
             add(transition);
-            inputLockout = 0,6;
+            inputLockout = 0.6;
         }
 
         if (rudinn != null)

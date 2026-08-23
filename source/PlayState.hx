@@ -15,7 +15,7 @@ class PlayState extends FlxState
     public var kris:Player;
     public var noelle:Noelle;
     public var dialogueBox:DialogueBox;
-    public var saveThing:saveBlock;
+    public var saveThing:SaveBlock;
     var closetDoor:DarkDoor;
 
     var dialogueStage:Int = 0;

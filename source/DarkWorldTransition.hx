@@ -91,6 +91,13 @@ class DarkWorldTransition extends FlxSprite
         x = krisX;
         y = krisY;
 
+        // Keep the black background locked to the camera view during the fall so it never runs out
+        if (bgOverlay != null)
+        {
+            bgOverlay.x = FlxG.camera.scroll.x - FlxG.width;
+            bgOverlay.y = FlxG.camera.scroll.y - FlxG.height;
+        }
+
         if (soundCon == 1)
         {
             dronesfx = FlxG.sound.play("assets/sounds/snd_dtrans_drone.ogg", 0, true);
@@ -175,7 +182,6 @@ class DarkWorldTransition extends FlxSprite
                 if (timer == 30)
                 {
                     if (door != null) door.setDoorState(DarkDoor.STATE_OPEN_FRAME);
-
                     FlxG.sound.play("assets/sounds/snd_locker.ogg");
                     
                     krisV = 0;
@@ -274,19 +280,30 @@ class DarkWorldTransition extends FlxSprite
 
             case 31:
                 timer++;
+                
+                if (animation.curAnim != null && animation.curAnim.name == "fall_down_white")
+                {
+                    var sweepProgress = timer / 30;
+                    if (sweepProgress > 1) sweepProgress = 1;
+                    
+                    clipRect = new flixel.math.FlxRect(0, 0, frameWidth, Std.int(frameHeight * sweepProgress));
+                }
+
                 if (timer >= 130)
                 {
                     timer = 0;
                     krisV = -0.2;
                     krisF = 0.01;
                     con = 32;
-                    animation.play("smear");
+                    clipRect = null; 
+                    animation.play("fall_down_dw");
                 }
 
             case 32:
                 if (timer == 0)
                 {
-                    bgOverlay = new FlxSprite(0, 0).makeGraphic(FlxG.width * 4, FlxG.height * 16, 0xFF000000);
+                    // Create a massive overlay that tracks the camera cleanly
+                    bgOverlay = new FlxSprite(0, 0).makeGraphic(FlxG.width * 3, FlxG.height * 3, 0xFF000000);
                     FlxG.state.insert(FlxG.state.members.indexOf(this), bgOverlay);
                 }
                 timer++;

@@ -8,7 +8,7 @@ import flixel.text.FlxText;
 import flixel.ui.FlxVirtualPad;
 #end
 #if android
-import mobile.backend.StorageUtil;
+import StorageUtil;
 import sys.io.File;
 #end
 

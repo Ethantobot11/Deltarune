@@ -69,7 +69,8 @@ class PlayState extends FlxState
             FlxG.collide(kris, noelle);
         }
 
-        FlxG.collide(kris, closetDoor, saveThing);
+        FlxG.collide(kris, closetDoor);
+        FlxG.collide(kris, saveThing);
 
         var interactPressed = #if desktop FlxG.keys.anyJustPressed([Z, ENTER, SPACE]) #else virtualPad.buttonA.pressed #end;
 

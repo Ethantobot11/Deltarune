@@ -55,7 +55,7 @@ class SaveMenuSubState extends FlxSubState
         }
 
         soulCursor = new FlxSprite(60, 98);
-        soulCursor.loadGraphic("soul/iconOG");
+        soulCursor.loadGraphic("soul/iconOG.png");
         add(soulCursor);
 
         #if mobile

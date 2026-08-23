@@ -50,6 +50,8 @@ class Main extends Sprite
 
 	public function new()
 	{
+		CrashHandler.init();
+			
 		#if windows
 		untyped __cpp__("SetProcessDPIAware();");
 		#end

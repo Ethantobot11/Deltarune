@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
-import flixel.sound.FlxSound;
+import flixel.system.FlxSound;
 
 class DarkWorldTransition extends FlxSprite
 {
@@ -94,7 +94,7 @@ class DarkWorldTransition extends FlxSprite
         if (soundCon == 1)
         {
             dronesfx = FlxG.sound.play("assets/sounds/snd_dtrans_drone.ogg", 0, true);
-            dronesfx.fade(0.5, 1.0);
+            dronesfx.fadeIn(0.5);
             dronesfx.pitch = 0.1;
             dronetimer = 0;
             soundCon = 2;
@@ -242,11 +242,11 @@ class DarkWorldTransition extends FlxSprite
                 animation.play("turnaround");
                 con = 18;
                 timer = 0;
-                soundcon = 1;
+                soundCon = 1;
 
             case 18:
                 timer++;
-                krisX = krisXCurrent + (Math.sin(FlxAngle.toDeg(timer * 2.5)) * radius);
+                krisX = krisXCurrent + (Math.sin((timer * 2.5) * (Math.PI / 180)) * radius);
                 
                 if (timer >= 35)
                 {
@@ -292,7 +292,7 @@ class DarkWorldTransition extends FlxSprite
                 timer++;
                 if (timer >= 14)
                 {
-                    soundcon = 4;
+                    soundCon = 4;
                     if (dronesfx != null)
                         dronesfx.fadeOut(0.5);
                         

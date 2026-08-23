@@ -13,7 +13,7 @@ class OptionsState extends FlxState {
     private var selectedIndex:Int = 0;
     private final MAX_OPTIONS:Int = 3;
 
-    private static var showFps:Bool = true;
+    public static var showFps:Bool = true;
 
     private var optionBoxes:Array<FlxSprite> = [];
     private var optionTexts:Array<FlxText> = [];

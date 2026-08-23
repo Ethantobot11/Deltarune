@@ -13,7 +13,9 @@ import android.os.BatteryManager as AndroidBatteryManager;
 import android.os.Build.VERSION_CODES as AndroidVersionCode;
 #end
 
-import flixel.FlxG;
+import FlxG;
+import flixel.FlxState;
+import flixel.FlxSubState;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.util.FlxColor;

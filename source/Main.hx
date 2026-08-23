@@ -30,7 +30,7 @@ class Main extends Sprite
 	var gameWidth:Int = 320; 
 	var gameHeight:Int = 240; 
 	var zoom:Float = 1; 
-	var initialState:Class<FlxState> = PlayState;
+	var initialState:Class<FlxState> = MainMenuState;
 	var framerate:Int = 60; 
 	var skipSplash:Bool = true; 
 	var startFullscreen:Bool = false;

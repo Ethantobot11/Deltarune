@@ -158,20 +158,13 @@ class StorageUtil
 enum abstract StorageType(String) from String to String
 {
     final forcedPath = '/storage/emulated/0/';
-	final packageNameLocal = 'com.kraloyuncu.psychengine063';
-	final fileLocalONLINE = 'PsychOnline';
-	final fileLocal = 'PsychEngine';
-	final fileLocalNF = 'NF Engine';
-	final fileLocalEX = 'Psych Extended'; //idk why
+	final packageNameLocal = 'com.haxe.deltarune';
+	final fileLocal = 'Deltaruined';
 
 	var EXTERNAL_DATA = "EXTERNAL_DATA";
 	var EXTERNAL_OBB = "EXTERNAL_OBB";
 	var EXTERNAL_MEDIA = "EXTERNAL_MEDIA";
 	var EXTERNAL = "EXTERNAL";
-	var EXTERNAL_ONLINE = "EXTERNAL_ONLINE";
-	var EXTERNAL_NF = "EXTERNAL_NF";
-	var EXTERNAL_EX = "EXTERNAL_EX";
-	var EXTERNAL_PE = "EXTERNAL_PE";
 
 	public static function fromStr(str:String):StorageType
 	{
@@ -179,9 +172,6 @@ enum abstract StorageType(String) from String to String
 		final EXTERNAL_OBB = AndroidContext.getObbDir();
 		final EXTERNAL_MEDIA = AndroidEnvironment.getExternalStorageDirectory() + '/Android/media/' + lime.app.Application.current.meta.get('packageName');
 		final EXTERNAL = AndroidEnvironment.getExternalStorageDirectory() + '/.' + fileLocal;
-		final EXTERNAL_NF = AndroidEnvironment.getExternalStorageDirectory() + '/.' + fileLocalNF;
-		final EXTERNAL_EX = AndroidEnvironment.getExternalStorageDirectory() + '/.' + lime.app.Application.current.meta.get('file');
-		final EXTERNAL_ONLINE = AndroidEnvironment.getExternalStorageDirectory() + '/.' + fileLocalONLINE;
 
 		return switch (str)
 		{
@@ -189,9 +179,6 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			case "EXTERNAL_NF": EXTERNAL_NF;
-			case "EXTERNAL_EX": EXTERNAL_EX;
-			case "EXTERNAL_ONLINE": EXTERNAL_ONLINE;
 			default: StorageUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}
@@ -201,10 +188,7 @@ enum abstract StorageType(String) from String to String
 		final EXTERNAL_DATA = forcedPath + 'Android/data/' + packageNameLocal + '/files';
 		final EXTERNAL_OBB = forcedPath + 'Android/obb/' + packageNameLocal;
 		final EXTERNAL_MEDIA = forcedPath + 'Android/media/' + packageNameLocal;
-		final EXTERNAL_ONLINE = forcedPath + '.' + fileLocalONLINE;
 		final EXTERNAL = forcedPath + '.' + fileLocal;
-		final EXTERNAL_NF = forcedPath + '.' + fileLocalNF;
-		final EXTERNAL_EX = forcedPath + '.' + fileLocalEX;
 
 		return switch (str)
 		{
@@ -213,9 +197,6 @@ enum abstract StorageType(String) from String to String
 			case "EXTERNAL_OBB": EXTERNAL_OBB;
 			case "EXTERNAL_MEDIA": EXTERNAL_MEDIA;
 			case "EXTERNAL": EXTERNAL;
-			case "EXTERNAL_NF": EXTERNAL_NF;
-			case "EXTERNAL_EX": EXTERNAL_EX;
-			case "EXTERNAL_ONLINE": EXTERNAL_ONLINE;
 			default: StorageUtil.getExternalDirectory(str) + '.' + fileLocal;
 		}
 	}

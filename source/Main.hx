@@ -36,6 +36,8 @@ class Main extends Sprite
 	var startFullscreen:Bool = false;
 	public static var fpsVar:FPSCounter;
 
+	var showFps = (FlxG.save.data.options != null) ? FlxG.save.data.options.fpsEnabled : true;
+
 	public static function main():Void
 	{
 		Lib.current.addChild(new Main());

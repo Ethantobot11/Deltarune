@@ -13,21 +13,21 @@ class DarkTransitionLine extends FlxSprite
         super(spawnX, spawnY);
 
         var lineThickness:Int = 2;
-        var lineLength:Int = FlxG.random.int(40, 80);
+        var lineLength:Int = 184; 
         makeGraphic(lineThickness, lineLength, 0xFFFFFFFF);
 
-        alpha = FlxG.random.float(0.3, 0.6);
-        
-        moveSpeed = FlxG.random.float(350, 500);
+        scale.set(2, 4);
+        updateHitbox();
+
+        alpha = 0.5;
+        velocity.y = -FlxG.random.float(960, 1200);
     }
 
     override public function update(elapsed:Float)
     {
         super.update(elapsed);
 
-        y -= moveSpeed * elapsed;
-
-        if (y < FlxG.camera.scroll.y - 100 || y > FlxG.camera.scroll.y + FlxG.height + 100)
+        if (y < FlxG.camera.scroll.y - 200 || y > FlxG.camera.scroll.y + FlxG.height + 200)
         {
             destroy();
         }

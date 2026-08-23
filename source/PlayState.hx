@@ -100,7 +100,7 @@ class PlayState extends FlxState
                 kris.isBusy = true;
                 startBattle(rudinn);
             }
-            inputLockout = 0,6;
+            inputLockout = 0.6;
         }
 
         handleInputs();     

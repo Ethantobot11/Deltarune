@@ -46,7 +46,7 @@ class Main extends Sprite
 	var gameHeight:Int = 240; 
 	var zoom:Float = 1; 
 	var initialState:Class<FlxState> = MainMenuState;
-	var framerate:Int = 60; 
+	var framerate:Int = 30; 
 	var skipSplash:Bool = true; 
 	var startFullscreen:Bool = false;
 	public static var fpsVar:FPSCounter;
@@ -143,7 +143,7 @@ class Main extends Sprite
 		#end
 
 		FlxG.fixedTimestep = false;
-		FlxG.game.focusLostFramerate = #if mobile 30 #else 60 #end;
+		FlxG.game.focusLostFramerate = 30;
 		#if web
 		FlxG.keys.preventDefaultKeys.push(TAB);
 		#else

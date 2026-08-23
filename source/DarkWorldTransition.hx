@@ -38,7 +38,7 @@ class DarkWorldTransition extends FlxSprite
             "spr_kris_fall_d_white_00000",
             "spr_kris_fall_d_white_10000",
             "spr_kris_fall_d_white_20000"
-        ], 6, true);
+        ], 15, false);
         
         animation.addByPrefix("fall_down_dw", "spr_kris_fall_d_dw_", 6, true);
         animation.addByPrefix("smear", "spr_kris_fall_smear_", 15, false);
@@ -57,9 +57,10 @@ class DarkWorldTransition extends FlxSprite
 
     function startTransition()
     {
-        statePhase = 1; 
+        statePhase = 0;
         animation.play("run_up");
-        velocity.y = -50; 
+        velocity.y = 0;
+        timer = 0;
     }
 
     override public function update(elapsed:Float)
@@ -80,20 +81,30 @@ class DarkWorldTransition extends FlxSprite
 
         switch (statePhase)
         {
+            case 0:
+                velocity.y = 50;
+                if (timer >= 0.25)
+                {
+                    statePhase = 1;
+                    timer = 0;
+                    animation.play("run_up");
+                    velocity.y = -200;
+                }
+
             case 1:
-                if (timer >= 0.4)
+                if (timer >= 0.35)
                 {
                     if (door != null)
                         door.setDoorState(DarkDoor.STATE_OPEN_FRAME);
 
-                    velocity.y = -70;
+                    velocity.y = -150;
                     animation.play("fall_lw");
                     statePhase = 2;
                     timer = 0;
                 }
 
             case 2:
-                if (timer >= 0.6)
+                if (timer >= 0.5)
                 {
                     if (door != null)
                         door.setDoorState(DarkDoor.STATE_DARK_VOID);
@@ -109,13 +120,13 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 3:
-                if (timer >= 0.5 && velocity.y == 0)
+                if (timer >= 0.4 && velocity.y == 0)
                 {
                     velocity.y = 90;
                     animation.play("fall_down_lw");
                 }
 
-                if (timer >= 2.0)
+                if (timer >= 1.8)
                 {
                     statePhase = 4;
                     timer = 0;
@@ -124,7 +135,7 @@ class DarkWorldTransition extends FlxSprite
                 }
 
             case 4:
-                if (timer >= 1.2)
+                if (timer >= 0.12)
                 {
                     statePhase = 5;
                     timer = 0;

@@ -74,7 +74,7 @@ class MainMenuState extends FlxState {
         slotTexts.push(optionsText);
 
         soulCursor = new FlxSprite(40, 56);
-        soulCursor.loadGraphic("soul/iconOG");
+        soulCursor.loadGraphic("soul/iconOG.png");
         add(soulCursor);
 
         #if mobile

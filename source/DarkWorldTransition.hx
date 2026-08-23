@@ -5,7 +5,7 @@ import flixel.FlxSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.math.FlxMath;
 import flixel.math.FlxAngle;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 
 class DarkWorldTransition extends FlxSprite
 {

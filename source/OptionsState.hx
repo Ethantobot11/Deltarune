@@ -7,13 +7,25 @@ import flixel.text.FlxText;
 #if mobile
 import flixel.ui.FlxVirtualPad;
 #end
+#if android
+import mobile.backend.StorageUtil;
+import sys.io.File;
+#end
 
 class OptionsState extends FlxState {
 
     private var selectedIndex:Int = 0;
-    private final MAX_OPTIONS:Int = 3;
+    
+    private final MAX_OPTIONS:Int = #if android 4 #else 3 #end;
 
     public static var showFps:Bool = true;
+    public static var storageType:String = 'EXTERNAL';
+    
+    #if android
+    private var storageTypes:Array<String> = ["EXTERNAL_DATA", "EXTERNAL", "EXTERNAL_OBB", "EXTERNAL_MEDIA"];
+    private var storageIndex:Int = 0;
+    private var lastStorageType:String = 'EXTERNAL';
+    #end
 
     private var optionBoxes:Array<FlxSprite> = [];
     private var optionTexts:Array<FlxText> = [];
@@ -26,15 +38,23 @@ class OptionsState extends FlxState {
         super.create();
         trace("Entering OptionsState.create()...");
 
-        // Load or initialize options save data
         if (FlxG.save.data.options == null) {
             FlxG.save.data.options = {
                 fpsEnabled: true,
-                controlType: 0
+                controlType: 0,
+                storageType: 'EXTERNAL'
             };
             FlxG.save.flush();
         } else {
             showFps = FlxG.save.data.options.fpsEnabled;
+            #if android
+            if (FlxG.save.data.options.storageType != null) {
+                storageType = FlxG.save.data.options.storageType;
+                lastStorageType = storageType;
+                var idx = storageTypes.indexOf(storageType);
+                if (idx != -1) storageIndex = idx;
+            }
+            #end
         }
 
         var bg = new FlxSprite(0, 0);
@@ -42,13 +62,13 @@ class OptionsState extends FlxState {
         add(bg);
 
         for (i in 0...MAX_OPTIONS) {
-            var box = new FlxSprite(40, 50 + (i * 50));
-            box.makeGraphic(240, 40, 0xFF222244);
+            var box = new FlxSprite(40, 40 + (i * 45));
+            box.makeGraphic(240, 35, 0xFF222244);
             add(box);
             optionBoxes.push(box);
 
             var label = getOptionText(i);
-            var textObj = new FlxText(50, 58 + (i * 50), 0, label, 16);
+            var textObj = new FlxText(45, 48 + (i * 45), 0, label, 14);
             textObj.color = 0xFFFFFFFF;
             add(textObj);
             optionTexts.push(textObj);
@@ -104,8 +124,7 @@ class OptionsState extends FlxState {
         }
 
         if (backPressed) {
-            trace("Exiting Options Menu...");
-            FlxG.switchState(new MainMenuState());
+            exitOptions();
         }
     }
 
@@ -113,7 +132,12 @@ class OptionsState extends FlxState {
         switch (index) {
             case 0: return 'FPS Counter: ${showFps ? "ON" : "OFF"}';
             case 1: return 'Controls: ${FlxG.save.data.options.controlType == 0 ? "Default" : "Alt"}';
+            #if android
+            case 2: return 'Storage Type: $storageType';
+            case 3: return "Back to Main Menu";
+            #else
             case 2: return "Back to Main Menu";
+            #end
             default: return "";
         }
     }
@@ -127,9 +151,9 @@ class OptionsState extends FlxState {
     private function updateVisualSelection() {
         for (i in 0...optionBoxes.length) {
             if (i == selectedIndex) {
-                optionBoxes[i].makeGraphic(240, 40, 0xFF444488);
+                optionBoxes[i].makeGraphic(240, 35, 0xFF444488);
             } else {
-                optionBoxes[i].makeGraphic(240, 40, 0xFF222244);
+                optionBoxes[i].makeGraphic(240, 35, 0xFF222244);
             }
         }
     }
@@ -149,9 +173,31 @@ class OptionsState extends FlxState {
                 currentType = (currentType == 0) ? 1 : 0;
                 FlxG.save.data.options.controlType = currentType;
                 FlxG.save.flush();
+            #if android
             case 2:
-                FlxG.switchState(new MainMenuState());
+                storageIndex++;
+                if (storageIndex >= storageTypes.length) storageIndex = 0;
+                storageType = storageTypes[storageIndex];
+                FlxG.save.data.options.storageType = storageType;
+                FlxG.save.flush();
+            case 3:
+                exitOptions();
+            #else
+            case 2:
+                exitOptions();
+            #end
         }
+    }
+
+    private function exitOptions() {
+        #if android
+        if (storageType != lastStorageType) {
+            File.saveContent(lime.system.System.applicationStorageDirectory + 'storagetype.txt', storageType);
+            trace('Storage Type changed. A restart may be required.');
+        }
+        #end
+        trace("Exiting Options Menu...");
+        FlxG.switchState(new MainMenuState());
     }
 
     override public function destroy() {

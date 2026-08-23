@@ -63,6 +63,7 @@ class Main extends Sprite
 
 	public function new()
 	{
+		super();
 		#if mobile
 		#if android
 		StorageUtil.requestPermissions();
@@ -79,8 +80,6 @@ class Main extends Sprite
 			DisableProcessWindowsGhosting() // lets you move the window and such if it's not responding
 		")
 		#end
-
-		super();
 
 		if (stage != null)
 		{
@@ -117,11 +116,21 @@ class Main extends Sprite
 		fpsVar = new FPSCounter(10, 3, 0xFFFFFF);
 		addChild(fpsVar);
 		
-		Lib.current.stage.align = "tl";
-		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		if (fpsVar != null) {
-		    fpsVar.visible = OptionsState.showFps;
-		}
+		fpsVar = new FPSCounter(10, 3, 0xFFFFFF);
+		addChild(fpsVar);
+		fpsVar.visible = true; 
+		var timerListener:Event->Void = null;
+		timerListener = function(e:Event) {
+		    Lib.current.stage.removeEventListener(Event.ENTER_FRAME, timerListener);
+		    if (fpsVar != null) {
+		        try {
+		            fpsVar.visible = OptionsState.showFps;
+		        } catch (err:Dynamic) {
+		            trace("Could not load FPS preference yet: " + err);
+		        }
+		    }
+		};
+		Lib.current.stage.addEventListener(Event.ENTER_FRAME, timerListener);
 
 		#if linux
 		var icon = Image.fromFile("soul/iconOG.png");

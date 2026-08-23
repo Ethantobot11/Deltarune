@@ -1,6 +1,6 @@
 import flixel.FlxSprite;
 
-class saveBlock extends FlxSprite
+class SaveBlock extends FlxSprite
 {
     public var duh:FlxSprite;
   
